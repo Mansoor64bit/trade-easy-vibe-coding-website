@@ -1,45 +1,177 @@
-# 📈 TradeEasy
+# 📈 TradeEasy – Financial Literacy Platform
 
-## 📌 Project Overview
-**TradeEasy** is a full-stack web application designed to simplify financial literacy and introduce users to core trading concepts. Built with Python and the Flask framework, the platform offers an intuitive, interactive environment where users can learn about different investment vehicles and track their financial knowledge.
+## Overview
 
-## 🚀 Key Features
-*   **User Authentication:** Secure registration and login functionality.
-*   **Financial Modules:** Dedicated, easy-to-navigate interfaces for Stocks, Mutual Funds, Gold, and Futures & Options (F&O).
-*   **Knowledge Tracking:** Integrated financial literacy forms to assess and improve user understanding of markets.
-*   **Dynamic Data Management:** A robust SQLite database initialized and managed via custom Python scripts.
-*   **Responsive UI:** Clean, accessible frontend templates built with HTML5, CSS, and Jinja2.
+TradeEasy is a full-stack web application developed to promote financial literacy and introduce users to essential investment concepts through a simple and interactive learning platform.
 
-## 🛠️ Technology Stack
-*   **Backend:** Python, Flask, Jinja2
-*   **Database:** SQLite
-*   **Frontend:** HTML5, CSS
-*   **Environment Management:** pip, Virtualenv
-
-## 💻 Local Setup Instructions
-Follow these steps to run the TradeEasy application on your local machine:
-
-1. **Clone the repository**
-   git clone https://github.com/YourUsername/trade-easy-flask.git
-
-2. **Navigate to the project directory**
-   cd trade-easy-flask
-
-3. **Create and activate a virtual environment**
-   * Windows: `python -m venv venv` and then `venv\Scripts\activate`
-   * Mac/Linux: `python3 -m venv venv` and then `source venv/bin/activate`
-
-4. **Install required dependencies**
-   pip install -r requirements.txt
-
-5. **Initialize the database**
-   python init_db.py
-
-6. **Run the Flask application**
-   python app.py
-
-7. **View the app**
-   Open your web browser and navigate to `http://127.0.0.1:5000`
+The application provides educational modules covering different financial instruments while offering a secure user experience through authentication and database-backed functionality.
 
 ---
-*Developed as a comprehensive web development and financial literacy project.*
+
+## Project Objectives
+
+- Improve financial awareness among users
+- Introduce core investment concepts
+- Provide a structured learning experience
+- Demonstrate full-stack web development skills
+
+---
+
+## Key Features
+
+### User Authentication
+
+- User registration
+- Secure login functionality
+- Session management
+
+### Financial Learning Modules
+
+Educational sections covering:
+
+- Stocks
+- Mutual Funds
+- Gold Investments
+- Futures and Options (F&O)
+
+### Financial Literacy Assessment
+
+- Interactive forms
+- Knowledge tracking
+- User responses stored in database
+
+### Database Management
+
+- SQLite database integration
+- Dynamic data storage and retrieval
+- Database initialization through Python scripts
+
+### Responsive User Interface
+
+- HTML5 templates
+- CSS styling
+- Jinja2 templating engine
+- Mobile-friendly design
+
+---
+
+## Technology Stack
+
+### Backend
+
+- Python
+- Flask
+- Jinja2
+
+### Frontend
+
+- HTML5
+- CSS
+
+### Database
+
+- SQLite
+
+### Development Tools
+
+- Virtual Environment (venv)
+- pip
+
+---
+
+## Project Structure
+
+```text
+app.py              Main Flask application
+init_db.py          Database initialization
+templates/          HTML templates
+static/             CSS and static assets
+database/           SQLite database files
+```
+
+---
+
+## Installation and Setup
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/yourusername/tradeeasy-financial-literacy-platform.git
+```
+
+### 2. Navigate to Project Directory
+
+```bash
+cd tradeeasy-financial-literacy-platform
+```
+
+### 3. Create Virtual Environment
+
+#### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+#### Linux / macOS
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Initialize Database
+
+```bash
+python init_db.py
+```
+
+### 6. Run Application
+
+```bash
+python app.py
+```
+
+### 7. Access Application
+
+Open your browser and visit:
+
+```text
+http://127.0.0.1:5000
+```
+
+---
+
+## Skills Demonstrated
+
+- Full Stack Development
+- Python Programming
+- Flask Framework
+- Database Design
+- Authentication Systems
+- Frontend Development
+- Backend Development
+- Problem Solving
+
+---
+
+## Future Enhancements
+
+- User dashboard
+- Investment calculators
+- Market data integration
+- Financial quizzes
+- Portfolio tracking tools
+
+---
+
+## Disclaimer
+
+This project was developed for educational and portfolio purposes.
