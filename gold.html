@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Investment - TradeEasy</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            padding-top: 76px;
+        }
+        
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .preloader-content {
+            text-align: center;
+        }
+        
+        .preloader-logo {
+            font-size: 3rem;
+            color: #ffc107;
+            animation: bounce 1s infinite;
+        }
+        
+        .preloader-text {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffc107 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            animation: rotate 3s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #ffc107 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #212529;
+            padding: 4rem 0 3rem 0;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Gold Price Ticker */
+        .price-ticker {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+        
+        .price-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .price-card:last-child {
+            border-right: none;
+        }
+        
+        .price-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffc107;
+            margin-bottom: 0.3rem;
+        }
+        
+        .price-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .price-change.positive {
+            color: #198754;
+        }
+        
+        .price-change.negative {
+            color: #dc3545;
+        }
+        
+        /* Investment Plans */
+        .plans-section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #ffc107;
+        }
+        
+        .plan-card.featured {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #212529;
+            transform: scale(1.05);
+        }
+        
+        .plan-badge {
+            background: #0d6efd;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .plan-icon {
+            font-size: 3rem;
+            color: #ffc107;
+            margin-bottom: 1.5rem;
+        }
+        
+        .plan-card.featured .plan-icon {
+            color: #212529;
+        }
+        
+        .plan-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .plan-description {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .plan-card.featured .plan-description {
+            color: rgba(33, 37, 41, 0.8);
+        }
+        
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        
+        .plan-features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .plan-card.featured .plan-features li {
+            border-bottom-color: rgba(0,0,0,0.1);
+        }
+        
+        .plan-features i {
+            color: #198754;
+            font-size: 1.2rem;
+        }
+        
+        .plan-btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Benefits Section */
+        .benefits-section {
+            background: white;
+            padding: 5rem 0;
+        }
+        
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .benefit-icon {
+            font-size: 3rem;
+            color: #ffc107;
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #212529;
+        }
+        
+        .benefit-text {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        /* Calculator Section */
+        .calculator-section {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+        }
+        
+        .calc-btn {
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #212529;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .calc-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.3);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .result-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        /* Scroll to Top Button */
+        #scrollTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffc107;
+            color: #212529;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+        
+        #scrollTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #scrollTop:hover {
+            background: #ff9800;
+            transform: translateY(-5px);
+        }
+        
+        /* Footer */
+        footer {
+            background: #212529;
+            color: white;
+            padding: 3rem 0 1rem 0;
+        }
+        
+        .footer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffc107;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #ffc107;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #ffc107;
+            color: #212529;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #adb5bd;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .plan-card.featured {
+                transform: scale(1);
+            }
+            
+            .price-card {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .price-card:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <div class="preloader-text">TradeEasy</div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-graph-up-arrow logo-icon"></i>
+                TradeEasy
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="stocks.html">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="fo.html">F&O</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mutualfunds.html">Mutual Funds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="gold.html">Gold</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title"><i class="bi bi-coin"></i> Gold Investment</h1>
+            <p class="page-subtitle">Secure your future with digital and physical gold</p>
+        </div>
+    </section>
+
+    <!-- Gold Price Ticker -->
+    <section class="price-ticker">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="price-card">
+                        <div class="price-label">24K Gold (10g)</div>
+                        <div class="price-value">₹62,450</div>
+                        <div class="price-change positive">
+                            <i class="bi bi-arrow-up"></i> +0.85%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="price-card">
+                        <div class="price-label">22K Gold (10g)</div>
+                        <div class="price-value">₹57,280</div>
+                        <div class="price-change positive">
+                            <i class="bi bi-arrow-up"></i> +0.92%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="price-card">
+                        <div class="price-label">Gold ETF (1g)</div>
+                        <div class="price-value">₹6,245</div>
+                        <div class="price-change positive">
+                            <i class="bi bi-arrow-up"></i> +0.85%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="price-card">
+                        <div class="price-label">Sovereign Gold Bond</div>
+                        <div class="price-value">₹6,145</div>
+                        <div class="price-change positive">
+                            <i class="bi bi-arrow-up"></i> +0.75%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Plans -->
+    <section class="plans-section">
+        <div class="container">
+            <h2 class="section-title">Gold Investment Plans</h2>
+            <p class="section-subtitle">Choose the perfect plan for your investment goals</p>
+            
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="plan-card">
+                        <div class="plan-icon">
+                            <i class="bi bi-coin"></i>
+                        </div>
+                        <h3 class="plan-title">Digital Gold</h3>
+                        <p class="plan-description">Buy and sell gold in digital form with 99.99% purity guarantee</p>
+                        <ul class="plan-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Start from ₹100</li>
+                            <li><i class="bi bi-check-circle-fill"></i> 24K pure gold</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Instant liquidity</li>
+                            <li><i class="bi bi-check-circle-fill"></i> No storage hassle</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Home delivery option</li>
+                        </ul>
+                        <button class="plan-btn btn btn-primary">Start Investing</button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="plan-card featured">
+                        <div class="plan-badge">Most Popular</div>
+                        <div class="plan-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <h3 class="plan-title">Gold Savings Plan</h3>
+                        <p class="plan-description">Systematic investment in gold with flexible monthly contributions</p>
+                        <ul class="plan-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Monthly SIP from ₹500</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Auto-debit facility</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Wealth accumulation</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Flexible tenure</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Tax benefits available</li>
+                        </ul>
+                        <button class="plan-btn btn btn-dark">Get Started</button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="plan-card">
+                        <div class="plan-icon">
+                            <i class="bi bi-gem"></i>
+                        </div>
+                        <h3 class="plan-title">Physical Gold</h3>
+                        <p class="plan-description">Purchase gold coins and bars with certified purity</p>
+                        <ul class="plan-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Gold coins & bars</li>
+                            <li><i class="bi bi-check-circle-fill"></i> BIS hallmarked</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Secure packaging</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Free home delivery</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Buyback guarantee</li>
+                        </ul>
+                        <button class="plan-btn btn btn-primary">Explore Options</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2 class="section-title">Why Invest in Gold?</h2>
+            <p class="section-subtitle">Benefits of gold investment for your portfolio</p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4 class="benefit-title">Safe Haven Asset</h4>
+                        <p class="benefit-text">Gold acts as a hedge against inflation and economic uncertainty, protecting your wealth during market volatility</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h4 class="benefit-title">Long-term Growth</h4>
+                        <p class="benefit-text">Historically, gold has shown consistent appreciation in value over the long term, making it ideal for wealth preservation</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <h4 class="benefit-title">High Liquidity</h4>
+                        <p class="benefit-text">Convert your gold investments to cash quickly and easily with minimal hassle and competitive market rates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+        <div class="container">
+            <h2 class="section-title">Gold Investment Calculator</h2>
+            <p class="section-subtitle">Calculate your potential returns from gold investment</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="calculator-card">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Investment Amount (₹)</label>
+                                <input type="number" class="form-control" id="investAmount" value="10000" min="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Investment Period (Years)</label>
+                                <select class="form-select" id="investPeriod">
+                                    <option value="1">1 Year</option>
+                                    <option value="3" selected>3 Years</option>
+                                    <option value="5">5 Years</option>
+                                    <option value="10">10 Years</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Expected Annual Return (%)</label>
+                                <input type="number" class="form-control" id="returnRate" value="10" min="0" max="30">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Investment Type</label>
+                                <select class="form-select" id="investType">
+                                    <option value="lumpsum">Lump Sum</option>
+                                    <option value="sip">Monthly SIP</option>
+                                </select>
+                            </div>
+                            <div class="col-12 text-center mt-4">
+                                <button class="calc-btn" onclick="calculateReturns()">Calculate Returns</button>
+                            </div>
+                        </div>
+                        
+                        <div class="result-card" id="resultCard" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="result-label">Total Investment</div>
+                                    <div class="result-value" id="totalInvest">₹0</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="result-label">Estimated Returns</div>
+                                    <div class="result-value" id="estimatedReturns">₹0</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="result-label">Final Value</div>
+                                    <div class="result-value" id="finalValue">₹0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">TradeEasy</h5>
+                    <p>Empowering investors with simplified trading solutions and financial education.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="stocks.html">Stocks</a></li>
+                        <li><a href="fo.html">Futures & Options</a></li>
+                        <li><a href="mutualfunds.html">Mutual Funds</a></li>
+                        <li><a href="gold.html">Gold Investment</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Support</h5>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="literacyform.html">Financial Literacy</a></li>
+                        <li><a href="login.html">Login / Sign Up</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 TradeEasy. All rights reserved. | Designed with <i class="bi bi-heart-fill text-danger"></i> for investors</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTop">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Scroll to Top Button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Gold Investment Calculator
+        function calculateReturns() {
+            const amount = parseFloat(document.getElementById('investAmount').value);
+            const period = parseInt(document.getElementById('investPeriod').value);
+            const rate = parseFloat(document.getElementById('returnRate').value) / 100;
+            const type = document.getElementById('investType').value;
+            
+            let totalInvestment, finalValue, returns;
+            
+            if (type === 'lumpsum') {
+                totalInvestment = amount;
+                finalValue = amount * Math.pow(1 + rate, period);
+            } else {
+                // SIP calculation
+                const months = period * 12;
+                const monthlyRate = rate / 12;
+                finalValue = amount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+                totalInvestment = amount * months;
+            }
+            
+            returns = finalValue - totalInvestment;
+            
+            document.getElementById('totalInvest').textContent = '₹' + totalInvestment.toLocaleString('en-IN', {maximumFractionDigits: 0});
+            document.getElementById('estimatedReturns').textContent = '₹' + returns.toLocaleString('en-IN', {maximumFractionDigits: 0});
+            document.getElementById('finalValue').textContent = '₹' + finalValue.toLocaleString('en-IN', {maximumFractionDigits: 0});
+            
+            document.getElementById('resultCard').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

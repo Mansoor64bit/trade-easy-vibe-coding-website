@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks - TradeEasy</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            padding-top: 76px;
+        }
+        
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .preloader-content {
+            text-align: center;
+        }
+        
+        .preloader-logo {
+            font-size: 3rem;
+            color: #ffc107;
+            animation: bounce 1s infinite;
+        }
+        
+        .preloader-text {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffc107 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            animation: rotate 3s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #ffc107 !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            padding: 4rem 0 3rem 0;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-btn {
+            margin: 0.3rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid #0d6efd;
+            background: white;
+            color: #0d6efd;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #0d6efd;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Stock Cards */
+        .stocks-section {
+            padding: 3rem 0 5rem 0;
+        }
+        
+        .stock-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #0d6efd;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stock-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+        }
+        
+        .stock-symbol {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .stock-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #212529;
+        }
+        
+        .stock-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .price-change {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .price-change.positive {
+            background: #d1f2dd;
+            color: #198754;
+        }
+        
+        .price-change.negative {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .stock-details {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 0.2rem;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        .trade-btn {
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .trade-btn:hover {
+            background: #0a58ca;
+            transform: scale(1.05);
+        }
+        
+        /* Stock Table */
+        .table-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+        }
+        
+        .table-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #212529;
+        }
+        
+        .custom-table {
+            width: 100%;
+        }
+        
+        .custom-table thead {
+            background: #f8f9fa;
+        }
+        
+        .custom-table th {
+            padding: 1rem;
+            font-weight: 600;
+            color: #212529;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .custom-table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .custom-table tbody tr {
+            transition: background 0.3s ease;
+        }
+        
+        .custom-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* Scroll to Top Button */
+        #scrollTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0d6efd;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+        
+        #scrollTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #scrollTop:hover {
+            background: #0a58ca;
+            transform: translateY(-5px);
+        }
+        
+        /* Footer */
+        footer {
+            background: #212529;
+            color: white;
+            padding: 3rem 0 1rem 0;
+        }
+        
+        .footer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffc107;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #ffc107;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #ffc107;
+            color: #212529;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #adb5bd;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .stock-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stock-details {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <div class="preloader-text">TradeEasy</div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-graph-up-arrow logo-icon"></i>
+                TradeEasy
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="stocks.html">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="fo.html">F&O</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mutualfunds.html">Mutual Funds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gold.html">Gold</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title"><i class="bi bi-graph-up"></i> Stocks Trading</h1>
+            <p class="page-subtitle">Trade top-performing stocks with real-time market data</p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="text-center">
+                <button class="filter-btn active" data-filter="all">All Stocks</button>
+                <button class="filter-btn" data-filter="tech">Technology</button>
+                <button class="filter-btn" data-filter="finance">Finance</button>
+                <button class="filter-btn" data-filter="pharma">Pharma</button>
+                <button class="filter-btn" data-filter="energy">Energy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stocks Section -->
+    <section class="stocks-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="tech">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">Reliance Industries</h3>
+                                <span class="stock-symbol">NSE: RELIANCE</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹2,456.80</div>
+                                <span class="price-change positive">
+                                    <i class="bi bi-arrow-up"></i> +2.45%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹16.6L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">2.5M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">28.5</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="tech">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">Tata Consultancy Services</h3>
+                                <span class="stock-symbol">NSE: TCS</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹3,742.50</div>
+                                <span class="price-change positive">
+                                    <i class="bi bi-arrow-up"></i> +1.85%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹13.7L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">1.8M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">31.2</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="finance">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">HDFC Bank</h3>
+                                <span class="stock-symbol">NSE: HDFCBANK</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹1,625.30</div>
+                                <span class="price-change negative">
+                                    <i class="bi bi-arrow-down"></i> -0.75%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹12.4L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">3.2M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">19.8</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="tech">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">Infosys Limited</h3>
+                                <span class="stock-symbol">NSE: INFY</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹1,486.20</div>
+                                <span class="price-change positive">
+                                    <i class="bi bi-arrow-up"></i> +3.12%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹6.2L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">4.1M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">27.5</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="pharma">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">Sun Pharmaceutical</h3>
+                                <span class="stock-symbol">NSE: SUNPHARMA</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹1,142.65</div>
+                                <span class="price-change positive">
+                                    <i class="bi bi-arrow-up"></i> +1.20%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹2.7L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">1.5M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">35.8</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="stock-card" data-category="energy">
+                        <div class="stock-header">
+                            <div>
+                                <h3 class="stock-name">NTPC Limited</h3>
+                                <span class="stock-symbol">NSE: NTPC</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="stock-price">₹285.40</div>
+                                <span class="price-change negative">
+                                    <i class="bi bi-arrow-down"></i> -1.15%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stock-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Market Cap</span>
+                                <span class="detail-value">₹2.8L Cr</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Volume</span>
+                                <span class="detail-value">5.8M</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">P/E Ratio</span>
+                                <span class="detail-value">16.3</span>
+                            </div>
+                        </div>
+                        <button class="trade-btn">Trade Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Table -->
+            <div class="table-section mt-5">
+                <h2 class="table-title">Top Gainers Today</h2>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Symbol</th>
+                                <th>Price</th>
+                                <th>Change</th>
+                                <th>Volume</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Asian Paints</strong></td>
+                                <td>ASIANPAINT</td>
+                                <td>₹2,985.50</td>
+                                <td><span class="price-change positive">+4.25%</span></td>
+                                <td>875K</td>
+                                <td><button class="btn btn-sm btn-primary">Buy</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wipro</strong></td>
+                                <td>WIPRO</td>
+                                <td>₹425.80</td>
+                                <td><span class="price-change positive">+3.80%</span></td>
+                                <td>2.1M</td>
+                                <td><button class="btn btn-sm btn-primary">Buy</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Titan Company</strong></td>
+                                <td>TITAN</td>
+                                <td>₹3,156.20</td>
+                                <td><span class="price-change positive">+3.45%</span></td>
+                                <td>1.2M</td>
+                                <td><button class="btn btn-sm btn-primary">Buy</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bajaj Finance</strong></td>
+                                <td>BAJFINANCE</td>
+                                <td>₹6,742.30</td>
+                                <td><span class="price-change positive">+2.95%</span></td>
+                                <td>950K</td>
+                                <td><button class="btn btn-sm btn-primary">Buy</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Maruti Suzuki</strong></td>
+                                <td>MARUTI</td>
+                                <td>₹10,256.75</td>
+                                <td><span class="price-change positive">+2.60%</span></td>
+                                <td>450K</td>
+                                <td><button class="btn btn-sm btn-primary">Buy</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">TradeEasy</h5>
+                    <p>Empowering investors with simplified trading solutions and financial education.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="stocks.html">Stocks</a></li>
+                        <li><a href="fo.html">Futures & Options</a></li>
+                        <li><a href="mutualfunds.html">Mutual Funds</a></li>
+                        <li><a href="gold.html">Gold Investment</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5 class="footer-title">Support</h5>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="literacyform.html">Financial Literacy</a></li>
+                        <li><a href="login.html">Login / Sign Up</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 TradeEasy. All rights reserved. | Designed with <i class="bi bi-heart-fill text-danger"></i> for investors</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTop">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Scroll to Top Button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Filter Functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const stockCards = document.querySelectorAll('.stock-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                stockCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.parentElement.style.display = 'block';
+                    } else {
+                        if (card.getAttribute('data-category') === filter) {
+                            card.parentElement.style.display = 'block';
+                        } else {
+                            card.parentElement.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
